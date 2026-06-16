@@ -1,5 +1,5 @@
 SRC_NAME = htop-3.0.2
-SRC_URL = https://distfiles.macports.org/htop/htop-3.0.2.tar.gz
+SRC_URL = https://github.com/htop-dev/htop/archive/refs/tags/3.0.2.tar.gz
 THISDIR = $(shell pwd)
 
 all: download_test extract_test config_test
@@ -24,6 +24,7 @@ config_test:
 
 configure:
 	( cd $(SRC_NAME) ; \
+	./autogen.sh ; \
 	./configure \
 		--prefix=/usr \
 		--enable-unicode \
