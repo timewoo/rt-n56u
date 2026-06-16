@@ -221,6 +221,20 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 			showhide_div('row_s5_enable', 0);
 			showhide_div('row_s5_username', 0);
 			showhide_div('row_s5_password', 0);
+			showhide_div('row_xray_id', 0);
+			showhide_div('row_xray_flow', 0);
+			showhide_div('row_xray_net', 0);
+			showhide_div('row_xray_security', 0);
+			showhide_div('row_xray_sni', 0);
+			showhide_div('row_xray_fingerprint', 0);
+			showhide_div('row_xray_alpn', 0);
+			showhide_div('row_xray_insecure', 0);
+			showhide_div('row_xray_pbk', 0);
+			showhide_div('row_xray_sid', 0);
+			showhide_div('row_xray_spx', 0);
+			showhide_div('row_xray_ws_host', 0);
+			showhide_div('row_xray_ws_path', 0);
+			showhide_div('row_xray_grpc', 0);
 			
 			var b = document.form.ssp_type.value;
 			if (b == "ss") {
@@ -251,10 +265,51 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 				showhide_div('row_v2_mux', 1);
 				//showhide_div('row_tj_tls_host', 1);
 				showhide_div('row_ssp_insecure', 1);
+			} else if (b == "xray") {
+				showhide_div('row_xray_id', 1);
+				showhide_div('row_xray_flow', 1);
+				showhide_div('row_xray_net', 1);
+				showhide_div('row_xray_security', 1);
+				switch_xray_transport();
+				switch_xray_security();
 			} else if (b == "socks5") {
 				showhide_div('row_s5_enable', 1);
 				showhide_div('row_s5_username', 1);
 				showhide_div('row_s5_password', 1);
+			}
+		}
+		function switch_xray_security() {
+			showhide_div('row_xray_sni', 0);
+			showhide_div('row_xray_fingerprint', 0);
+			showhide_div('row_xray_alpn', 0);
+			showhide_div('row_xray_insecure', 0);
+			showhide_div('row_xray_pbk', 0);
+			showhide_div('row_xray_sid', 0);
+			showhide_div('row_xray_spx', 0);
+			var s = document.form.xray_security.value;
+			if (s == "tls") {
+				showhide_div('row_xray_sni', 1);
+				showhide_div('row_xray_fingerprint', 1);
+				showhide_div('row_xray_alpn', 1);
+				showhide_div('row_xray_insecure', 1);
+			} else if (s == "reality") {
+				showhide_div('row_xray_sni', 1);
+				showhide_div('row_xray_fingerprint', 1);
+				showhide_div('row_xray_pbk', 1);
+				showhide_div('row_xray_sid', 1);
+				showhide_div('row_xray_spx', 1);
+			}
+		}
+		function switch_xray_transport() {
+			showhide_div('row_xray_ws_host', 0);
+			showhide_div('row_xray_ws_path', 0);
+			showhide_div('row_xray_grpc', 0);
+			var t = document.form.xray_transport.value;
+			if (t == "ws") {
+				showhide_div('row_xray_ws_host', 1);
+				showhide_div('row_xray_ws_path', 1);
+			} else if (t == "grpc") {
+				showhide_div('row_xray_grpc', 1);
 			}
 		}
 		function switch_v2_type() {
@@ -710,6 +765,22 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 			document.getElementById("v2_quic_key").value = '';
 			document.getElementById("v2_quic_guise").value = 'none';
 			document.getElementById("v2_quic_security").value = 'none';
+			//xray
+			document.getElementById("xray_id").value = '';
+			document.getElementById("xray_flow").value = '';
+			document.getElementById("xray_transport").value = 'tcp';
+			document.getElementById("xray_security").value = 'none';
+			document.getElementById("xray_sni").value = '';
+			document.getElementById("xray_fingerprint").value = 'chrome';
+			document.getElementById("xray_alpn").value = '';
+			document.getElementById("xray_insecure").value = 0;
+			document.getElementById("xray_insecure").checked = false;
+			document.getElementById("xray_pbk").value = '';
+			document.getElementById("xray_sid").value = '';
+			document.getElementById("xray_spx").value = '/';
+			document.getElementById("xray_ws_host").value = '';
+			document.getElementById("xray_ws_path").value = '/';
+			document.getElementById("xray_grpc_service").value = '';
 			//trojan				
 			// document.getElementById("ssp_insecure").value = 0;
 			// document.getElementById("ssp_insecure").checked = false;
@@ -774,6 +845,22 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 					document.getElementById("v2_quic_key").value = getProperty(ss, 'quic_key', '');
 					document.getElementById("v2_quic_security").value = getProperty(ss, 'quic_security', 'none');
 				}
+			} else if (type == "xray") {
+				document.getElementById("xray_id").value = getProperty(ss, 'xray_id', '');
+				document.getElementById("xray_flow").value = getProperty(ss, 'xray_flow', '');
+				document.getElementById("xray_transport").value = getProperty(ss, 'xray_transport', 'tcp');
+				document.getElementById("xray_security").value = getProperty(ss, 'xray_security', 'none');
+				document.getElementById("xray_sni").value = getProperty(ss, 'xray_sni', '');
+				document.getElementById("xray_fingerprint").value = getProperty(ss, 'xray_fingerprint', 'chrome');
+				document.getElementById("xray_alpn").value = getProperty(ss, 'xray_alpn', '');
+				document.getElementById("xray_insecure").value = getProperty(ss, 'xray_insecure', 0);
+				document.getElementById("xray_insecure").checked = document.getElementById("xray_insecure").value != 0;
+				document.getElementById("xray_pbk").value = getProperty(ss, 'xray_pbk', '');
+				document.getElementById("xray_sid").value = getProperty(ss, 'xray_sid', '');
+				document.getElementById("xray_spx").value = getProperty(ss, 'xray_spx', '/');
+				document.getElementById("xray_ws_host").value = getProperty(ss, 'xray_ws_host', '');
+				document.getElementById("xray_ws_path").value = getProperty(ss, 'xray_ws_path', '/');
+				document.getElementById("xray_grpc_service").value = getProperty(ss, 'xray_grpc_service', '');
 			} else if (type == "trojan") {
 				document.getElementById("ssp_insecure").value = getProperty(ss, 'insecure', 0);
 				document.getElementById("ssp_insecure").checked =  document.getElementById("ssp_insecure").value != 0;
@@ -1215,6 +1302,38 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 					DataObj.quic_guise = document.getElementById("v2_quic_guise").value;
 					DataObj.quic_key = document.getElementById("v2_quic_key").value;
 					DataObj.quic_security = document.getElementById("v2_quic_security").value;
+				}
+			} else if (type == "xray") {
+				var DataObj = {
+					type: document.getElementById("ssp_type").value,
+					alias: document.getElementById("ssp_name").value,
+					server: document.getElementById("ssp_server").value,
+					server_port: document.getElementById("ssp_prot").value,
+					xray_id: document.getElementById("xray_id").value,
+					xray_flow: document.getElementById("xray_flow").value,
+					xray_transport: document.getElementById("xray_transport").value,
+					xray_security: document.getElementById("xray_security").value,
+					coustom: "1",
+				}
+				var sec = document.getElementById("xray_security").value;
+				if (sec == "tls") {
+					DataObj.xray_sni = document.getElementById("xray_sni").value;
+					DataObj.xray_fingerprint = document.getElementById("xray_fingerprint").value;
+					DataObj.xray_alpn = document.getElementById("xray_alpn").value;
+					DataObj.xray_insecure = document.getElementById("xray_insecure").checked ? 1 : 0;
+				} else if (sec == "reality") {
+					DataObj.xray_sni = document.getElementById("xray_sni").value;
+					DataObj.xray_fingerprint = document.getElementById("xray_fingerprint").value;
+					DataObj.xray_pbk = document.getElementById("xray_pbk").value;
+					DataObj.xray_sid = document.getElementById("xray_sid").value;
+					DataObj.xray_spx = document.getElementById("xray_spx").value;
+				}
+				var net = document.getElementById("xray_transport").value;
+				if (net == "ws") {
+					DataObj.xray_ws_host = document.getElementById("xray_ws_host").value;
+					DataObj.xray_ws_path = document.getElementById("xray_ws_path").value;
+				} else if (net == "grpc") {
+					DataObj.xray_grpc_service = document.getElementById("xray_grpc_service").value;
 				}
 			} else if (type == "trojan") {
 				var DataObj = {
@@ -1779,6 +1898,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 																	<option value="ssr">SSR</option>
 																	<option value="trojan">Trojan</option>
 																	<option value="v2ray">V2ray</option>
+																	<option value="xray">Xray (XTLS)</option>
 																	<option value="socks5">SOCKS5</option>
 																</select>
 															</td>
@@ -2171,6 +2291,134 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<th>MUX</th>
 															<td>
 																<input type="checkbox" name="v2_mux" id="v2_mux" >
+															</td>
+														</tr>
+														<!-- ============ Xray (XTLS) 字段 ============ -->
+														<tr id="row_xray_id" style="display:none;">
+															<th width="50%">用户ID (UUID)</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_id" id="xray_id"
+																	style="width: 200px" value="" />
+															</td>
+														</tr>
+														<tr id="row_xray_flow" style="display:none;">
+															<th width="50%">流控 (Flow)</th>
+															<td>
+																<select name="xray_flow" id="xray_flow"
+																	class="input" style="width: 200px;">
+																	<option value="">无</option>
+																	<option value="xtls-rprx-vision">xtls-rprx-vision</option>
+																</select>
+															</td>
+														</tr>
+														<tr id="row_xray_net" style="display:none;">
+															<th width="50%">传输方式</th>
+															<td>
+																<select name="xray_transport" id="xray_transport"
+																	class="input" style="width: 200px;"
+																	onchange="switch_xray_transport()">
+																	<option value="tcp">TCP</option>
+																	<option value="ws">WebSocket</option>
+																	<option value="grpc">gRPC</option>
+																</select>
+															</td>
+														</tr>
+														<tr id="row_xray_security" style="display:none;">
+															<th width="50%">安全层</th>
+															<td>
+																<select name="xray_security" id="xray_security"
+																	class="input" style="width: 200px;"
+																	onchange="switch_xray_security()">
+																	<option value="none">none</option>
+																	<option value="tls">TLS</option>
+																	<option value="reality">Reality</option>
+																</select>
+															</td>
+														</tr>
+														<tr id="row_xray_sni" style="display:none;">
+															<th width="50%">SNI (serverName)</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_sni" id="xray_sni"
+																	style="width: 200px" value="" />
+															</td>
+														</tr>
+														<tr id="row_xray_fingerprint" style="display:none;">
+															<th width="50%">uTLS 指纹</th>
+															<td>
+																<select name="xray_fingerprint" id="xray_fingerprint"
+																	class="input" style="width: 200px;">
+																	<option value="chrome">chrome</option>
+																	<option value="firefox">firefox</option>
+																	<option value="safari">safari</option>
+																	<option value="ios">ios</option>
+																	<option value="android">android</option>
+																	<option value="edge">edge</option>
+																	<option value="random">random</option>
+																</select>
+															</td>
+														</tr>
+														<tr id="row_xray_alpn" style="display:none;">
+															<th width="50%">ALPN</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_alpn" id="xray_alpn"
+																	style="width: 200px" value="" placeholder="h2 或 http/1.1" />
+															</td>
+														</tr>
+														<tr id="row_xray_insecure" style="display:none;">
+															<th>allowInsecure</th>
+															<td>
+																<input type="checkbox" name="xray_insecure" id="xray_insecure" >
+															</td>
+														</tr>
+														<tr id="row_xray_pbk" style="display:none;">
+															<th width="50%">Reality PublicKey</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_pbk" id="xray_pbk"
+																	style="width: 200px" value="" />
+															</td>
+														</tr>
+														<tr id="row_xray_sid" style="display:none;">
+															<th width="50%">Reality ShortId</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_sid" id="xray_sid"
+																	style="width: 200px" value="" />
+															</td>
+														</tr>
+														<tr id="row_xray_spx" style="display:none;">
+															<th width="50%">Reality SpiderX</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_spx" id="xray_spx"
+																	style="width: 200px" value="/" />
+															</td>
+														</tr>
+														<tr id="row_xray_ws_host" style="display:none;">
+															<th width="50%">WebSocket Host</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_ws_host" id="xray_ws_host"
+																	style="width: 200px" value="" />
+															</td>
+														</tr>
+														<tr id="row_xray_ws_path" style="display:none;">
+															<th width="50%">WebSocket Path</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_ws_path" id="xray_ws_path"
+																	style="width: 200px" value="/" />
+															</td>
+														</tr>
+														<tr id="row_xray_grpc" style="display:none;">
+															<th width="50%">gRPC serviceName</th>
+															<td>
+																<input type="text" class="input" size="15"
+																	name="xray_grpc_service" id="xray_grpc_service"
+																	style="width: 200px" value="" />
 															</td>
 														</tr>
 														<!--<tr> <th>自动切换</th>
